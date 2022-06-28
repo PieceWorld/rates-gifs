@@ -1,2 +1,2 @@
 # RatesAndGifs
-Запуск html через localhost8080
+Запуск html через localhost:8080

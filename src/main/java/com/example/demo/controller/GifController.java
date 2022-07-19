@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.gifs.GifApp;
 import com.example.demo.model.rates.RatesApp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,13 +12,11 @@ import java.util.Set;
 
 @Controller
 public class GifController {
-    private RatesApp ratesApp;
-    private GifApp gifApp;
 
-    public GifController() {
-        this.ratesApp = new RatesApp();
-        this.gifApp = new GifApp();
-    }
+    @Autowired
+    private RatesApp ratesApp;
+    @Autowired
+    private GifApp gifApp;
 
     @RequestMapping(value = "/gifPage.html")
     public String gifController(@RequestParam(name = "rate", required = false) String rateName, Model model) {

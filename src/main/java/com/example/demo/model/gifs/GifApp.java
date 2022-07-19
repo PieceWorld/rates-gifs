@@ -4,13 +4,20 @@ import com.example.demo.model.rates.RatesApp;
 import feign.Feign;
 import feign.gson.GsonDecoder;
 import feign.okhttp.OkHttpClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GifApp {
+
+    @Autowired
     private RatesApp ratesApp;
 
-    public GifApp() {
-        this.ratesApp = new RatesApp();
-    }
+    @Value("${gifs.url}")
+    String urlGifs;
+    @Value("${api.key.gifs}")
+    String apiKeyGifs;
 
     /**
      * @param rateName Получает название валюты
@@ -18,12 +25,11 @@ public class GifApp {
      */
     public String getGifUrl(String rateName) {
         String gifTag = this.ratesApp.ratesApp(rateName);
-        String apiKey = "uSOi0Am8fLkDaSM08SHPEdvhu5pEENMN";
         GifClient gifClient = Feign.builder()
                 .client(new OkHttpClient())
                 .decoder(new GsonDecoder())
-                .target(GifClient.class, "https://api.giphy.com/v1/gifs/random");
-        GifResource gifResource = gifClient.getGif(apiKey, gifTag);
+                .target(GifClient.class, urlGifs);
+        GifResource gifResource = gifClient.getGif(apiKeyGifs, gifTag);
         return gifResource.getData().getImages().getOriginal().getUrl();
     }
 

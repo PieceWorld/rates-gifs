@@ -9,13 +9,18 @@ import java.util.Date;
 import java.util.Set;
 import feign.gson.GsonDecoder;
 import feign.okhttp.OkHttpClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 
-@SpringBootApplication
-
 @Component
 public class RatesApp {
+
+
+    @Value("${rates.url}")
+    String urlRates;
+    @Value("${api.key.rates}")
+    String apiKeyRates;
 
     public SimpleDateFormat formatter;
 
@@ -42,10 +47,9 @@ public class RatesApp {
         RatesClient ratesClient = Feign.builder()
                 .client(new OkHttpClient())
                 .decoder(new GsonDecoder())
-                .target(RatesClient.class, "https://openexchangerates.org/api/historical");
-        String appId = "b60ab82d067e44d2b8da0ed3ba6e4e2f";
-        RatesResource ratesResourceLatest = ratesClient.findByDate(appId, this.formatter.format(latestDate));
-        RatesResource ratesResourceYesterday = ratesClient.findByDate(appId, getYesterdayDate());
+                .target(RatesClient.class, urlRates);
+        RatesResource ratesResourceLatest = ratesClient.findByDate(apiKeyRates, this.formatter.format(latestDate));
+        RatesResource ratesResourceYesterday = ratesClient.findByDate(apiKeyRates, getYesterdayDate());
         double latestRate = ratesResourceLatest.getRates().get(rateName);
         double yesterdayRate = ratesResourceYesterday.getRates().get(rateName);
         return this.getGifTag(latestRate, yesterdayRate);
@@ -77,9 +81,8 @@ public class RatesApp {
         RatesClient ratesClient = Feign.builder()
                 .client(new OkHttpClient())
                 .decoder(new GsonDecoder())
-                .target(RatesClient.class, "https://openexchangerates.org/api/historical");
-        String appId = "b60ab82d067e44d2b8da0ed3ba6e4e2f";
-        RatesResource ratesResourceYesterday = ratesClient.findByDate(appId, getYesterdayDate());
+                .target(RatesClient.class, urlRates);
+        RatesResource ratesResourceYesterday = ratesClient.findByDate(apiKeyRates, getYesterdayDate());
         return ratesResourceYesterday.getRates().keySet();
 
     }

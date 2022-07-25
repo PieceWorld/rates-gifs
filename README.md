@@ -23,4 +23,4 @@ REST API гифок - https://developers.giphy.com/docs/api#quick-start-guide
 localhost:8080
 ```
 
-В application.properties указаны API ключи, моэно указать свои
+В application.properties указаны API ключи, можно указать свои
